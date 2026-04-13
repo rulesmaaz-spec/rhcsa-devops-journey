@@ -1,0 +1,88 @@
+#!/bin/bash
+# ============================================
+# system_report.sh - System Information Reporter
+# Author: Mohammad Maaz
+# Date: $(date +%Y-%m-%d)
+# Description: Automated system health report generator
+# 
+# This script is part of my RHCSA  and DevOps journey
+# ============================================
+
+# Color codes for better output 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Prints header
+echo ""
+echo "╔══════════════════════════════════════════════════════════════╗"
+echo "║                    SYSTEM HEALTH REPORT                      ║"
+echo "║                      $(date +"%Y-%m-%d %H:%M:%S")            ║"
+echo "╚══════════════════════════════════════════════════════════════╝"
+echo ""
+
+# System Information
+echo -e "${BLUE}📊 SYSTEM INFORMATION${NC}"
+echo "───────────────────────────────────────────────────────────────"
+echo "Hostname        : $(hostname)"
+echo "User            : $(whoami)"
+echo "Current Dir     : $(pwd)"
+echo "Kernel Version  : $(uname -r)"
+echo "OS              : $(cat /etc/os-release 2>/dev/null | grep "PRETTY_NAME")"
+echo "Uptime          : $(uptime -p)"
+echo ""
+
+# Disk Usage
+echo -e "${BLUE}💾 DISK USAGE${NC}"
+echo "───────────────────────────────────────────────────────────────"
+df -h | grep -v "tmpfs" | grep -v "devtmpfs"
+echo ""
+
+# Memory Usage
+echo -e "${BLUE}🧠 MEMORY INFO${NC}"
+echo "───────────────────────────────────────────────────────────────"
+free -h
+echo ""
+
+# Top 5 CPU Processes
+echo -e "${BLUE}🔥 TOP 5 CPU PROCESSES${NC}"
+echo "───────────────────────────────────────────────────────────────"
+ps aux --sort=-%cpu | head -6 | tail -5
+echo ""
+
+# Top 5 Memory Processes
+echo -e "${BLUE}💿 TOP 5 MEMORY PROCESSES${NC}"
+echo "───────────────────────────────────────────────────────────────"
+ps aux --sort=-%mem | head -6 | awk '{printf "  %-10s %-6s %-6s %s\n", $1, $3"%", $4"%", $11}'
+echo ""
+
+# Network Information
+echo -e "${BLUE}🌐 NETWORK INFO${NC}"
+echo "───────────────────────────────────────────────────────────────"
+ip addr show | grep -E "inet " | grep -v "127.0.0.1" | awk '{print "IP: " $2}'
+echo ""
+
+# Recent Errors (last 5)
+echo -e "${YELLOW}⚠️  RECENT SYSTEM ERRORS (last 5)${NC}"
+echo "───────────────────────────────────────────────────────────────"
+ERRORS=$(journalctl -n 50 2>/dev/null | grep -i "error" | tail -5)
+if [ -z "$ERRORS" ]; then
+    echo "  ✓ No recent errors found - System is healthy!"
+else
+    echo "$ERRORS"
+fi
+echo ""
+
+# Logged in Users
+echo -e "${BLUE}👥 LOGGED IN USERS${NC}"
+echo "───────────────────────────────────────────────────────────────"
+who
+echo ""
+
+# Footer
+echo "╔══════════════════════════════════════════════════════════════╗"
+echo "║  Report Generated: $(date)                                   ║"
+echo "╚══════════════════════════════════════════════════════════════╝"
+echo ""

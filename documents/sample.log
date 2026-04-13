@@ -1,0 +1,10 @@
+2026-04-01 08:30:15 INFO: Application started
+2026-04-01 08:31:22 INFO: User alice logged in from 192.168.1.100
+2026-04-01 08:32:45 ERROR: Database connection failed
+2026-04-01 08:33:01 WARNING: High memory usage detected
+2026-04-01 08:34:18 ERROR: Timeout connecting to API
+2026-04-01 08:35:30 INFO: User bob logged in from 10.0.0.50
+2026-04-01 08:36:15 ERROR: Disk space low
+2026-04-01 08:37:02 INFO: Backup completed successfully
+user_charlie accessed system from 172.16.5.10
+user_diana accessed system from 192.168.1.200

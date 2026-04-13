@@ -1,0 +1,4 @@
+[] Complete Day 1
+[] Create firt script
+[] Setup git hub
+[] Build inventory scripy
